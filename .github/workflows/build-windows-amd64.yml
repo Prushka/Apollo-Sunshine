@@ -65,10 +65,7 @@ jobs:
         shell: msys2 {0}
         run: |
           cmake --build build --parallel 2
-          # The upstream test project enables CTest but does not register the
-          # GoogleTest executable with add_test(). Run it directly so this
-          # workflow executes the unit and integration tests it just built.
-          ./build/tests/test_sunshine.exe --gtest_color=no
+          ctest --test-dir build --output-on-failure
 
       - name: Create AMD64 installer
         shell: msys2 {0}
