@@ -1,0 +1,83 @@
+name: Build Windows AMD64
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2025
+    timeout-minutes: 90
+
+    steps:
+      - name: Check out source and submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # Apollo's Windows build documentation requires the official Windows
+      # Node.js distribution instead of the MSYS2 Node.js package.
+      - name: Install official Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install official MSYS2 UCRT64 toolchain
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            git
+            mingw-w64-ucrt-x86_64-boost
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-cppwinrt
+            mingw-w64-ucrt-x86_64-curl-winssl
+            mingw-w64-ucrt-x86_64-MinHook
+            mingw-w64-ucrt-x86_64-miniupnpc
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-nlohmann_json
+            mingw-w64-ucrt-x86_64-nsis
+            mingw-w64-ucrt-x86_64-onevpl
+            mingw-w64-ucrt-x86_64-openssl
+            mingw-w64-ucrt-x86_64-opus
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-toolchain
+
+      - name: Configure Windows AMD64 release
+        shell: msys2 {0}
+        run: |
+          node --version
+          cmake --version
+          g++ --version
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_TESTS=ON
+
+      - name: Build and test
+        shell: msys2 {0}
+        run: |
+          cmake --build build --parallel 2
+          ctest --test-dir build --output-on-failure
+
+      - name: Create AMD64 installer
+        shell: msys2 {0}
+        run: |
+          cpack -G NSIS --config build/CPackConfig.cmake -B build/package
+          cd build/package
+          sha256sum *.exe > SHA256SUMS.txt
+
+      - name: Upload Windows AMD64 installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: Apollo-Windows-AMD64-USO-disabled
+          path: |
+            build/package/*.exe
+            build/package/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
