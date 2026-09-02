@@ -16,22 +16,23 @@ jobs:
 
     steps:
       - name: Check out source and submodules
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: recursive
 
       # Apollo's Windows build documentation requires the official Windows
       # Node.js distribution instead of the MSYS2 Node.js package.
       - name: Install official Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
 
       - name: Install official MSYS2 UCRT64 toolchain
-        uses: msys2/setup-msys2@v2
+        uses: msys2/setup-msys2@f84a36b4009b96413f91c01441130855db9392e5 # v2.9.0
         with:
           msystem: UCRT64
           update: true
+          path-type: inherit
           install: >-
             git
             mingw-w64-ucrt-x86_64-boost
@@ -73,7 +74,7 @@ jobs:
           sha256sum *.exe > SHA256SUMS.txt
 
       - name: Upload Windows AMD64 installer
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0f # v7.0.1
         with:
           name: Apollo-Windows-AMD64-USO-disabled
           path: |
