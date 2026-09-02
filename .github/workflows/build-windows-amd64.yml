@@ -16,14 +16,14 @@ jobs:
 
     steps:
       - name: Check out source and submodules
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           submodules: recursive
 
       # Apollo's Windows build documentation requires the official Windows
       # Node.js distribution instead of the MSYS2 Node.js package.
       - name: Install official Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version: 24
 
@@ -74,7 +74,7 @@ jobs:
           sha256sum *.exe > SHA256SUMS.txt
 
       - name: Upload Windows AMD64 installer
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0f # v7.0.1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: Apollo-Windows-AMD64-USO-disabled
           path: |
