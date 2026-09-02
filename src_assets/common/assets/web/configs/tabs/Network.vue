@@ -152,6 +152,15 @@ const effectivePort = computed(() => +config.value?.port ?? defaultMoonlightPort
       <div class="form-text">{{ $t('config.ping_timeout_desc') }}</div>
     </div>
 
+    <!-- UDP Segmentation Offload -->
+    <Checkbox class="mb-3"
+              id="enable_uso"
+              locale-prefix="config"
+              v-model="config.enable_uso"
+              default="false"
+              v-if="platform === 'windows'"
+    ></Checkbox>
+
   </div>
 </template>
 

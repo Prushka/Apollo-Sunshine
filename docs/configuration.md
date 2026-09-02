@@ -1704,6 +1704,33 @@ editing the `conf` file in a text editor. Use the examples as reference.
     </tr>
 </table>
 
+### enable_uso
+
+<table>
+    <tr>
+        <td>Description</td>
+        <td colspan="2">
+            Batch video packets using Windows UDP Segmentation Offload (USO).
+            When disabled, Apollo sends each video shard as a separate MTU-sized UDP datagram.
+            Leave this disabled for NIC drivers with unreliable USO behavior or when a fast host NIC
+            produces packet bursts that overrun a slower downstream link.
+            @note{Applies to Windows only.}
+        </td>
+    </tr>
+    <tr>
+        <td>Default</td>
+        <td colspan="2">@code{}
+            disabled
+            @endcode</td>
+    </tr>
+    <tr>
+        <td>Example</td>
+        <td colspan="2">@code{}
+            enable_uso = disabled
+            @endcode</td>
+    </tr>
+</table>
+
 ## Config Files
 
 ### file_apps

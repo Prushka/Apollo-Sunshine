@@ -674,6 +674,10 @@ namespace platf {
     uint16_t target_port;
     boost::asio::ip::address &source_address;
 
+    // Whether the platform may use UDP segmentation offload for this batch.
+    // Platforms without USO ignore this field.
+    bool enable_uso;
+
     /**
      * @brief Returns a payload buffer descriptor for the given payload offset.
      * @param offset The offset in the total payload data (bytes).

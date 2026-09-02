@@ -149,6 +149,15 @@ namespace config {
     std::string fallback_mode;
     bool isolated_virtual_display_option;
     bool ignore_encoder_probe_failure;
+
+    /**
+     * @brief Use Windows UDP Segmentation Offload for batched video sends.
+     *
+     * When disabled, Windows sends each video shard as its own MTU-sized UDP
+     * datagram. This avoids USO driver issues and large line-rate bursts on
+     * fast host interfaces connected to slower downstream links.
+     */
+    bool enable_uso;
   };
 
   struct audio_t {

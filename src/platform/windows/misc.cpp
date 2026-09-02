@@ -1406,6 +1406,14 @@ namespace platf {
   // Use UDP segmentation offload if it is supported by the OS. If the NIC is capable, this will use
   // hardware acceleration to reduce CPU usage. Support for USO was introduced in Windows 10 20H1.
   bool send_batch(batched_send_info_t &send_info) {
+    // WSASendMsg() treats all WSABUF entries as one datagram. Omitting
+    // UDP_SEND_MSG_SIZE here would therefore create a large, fragmented UDP
+    // datagram rather than a batch of normal packets. Tell the caller to use
+    // its existing per-shard fallback when USO is disabled.
+    if (!send_info.enable_uso && send_info.block_count > 1) {
+      return false;
+    }
+
     WSAMSG msg;
 
     // Convert the target address into a SOCKADDR
